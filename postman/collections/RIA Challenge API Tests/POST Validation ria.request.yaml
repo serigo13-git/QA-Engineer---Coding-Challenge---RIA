@@ -1,0 +1,67 @@
+$kind: http-request
+name: POST Validation ria
+description: ""
+url: https://httpbin.org/post
+method: POST
+body:
+  type: json
+  content: "{ \r
+
+    \  \"student\": \"Tim Allen\", \r
+
+    \  \"email_address\": \"tim@homeimprovement.com\", \r
+
+    \  \"phone\": \"(408) 8674530\", \r
+
+    \  \"current_grade\": \"B+\", \r
+
+    \  \"topping\": [ \r
+
+    \    \"bacon\", \r
+
+    \    \"cheese\", \r
+
+    \    \"mushroom\" \r
+
+    \  ] \r
+
+    }"
+scripts:
+  - type: afterResponse
+    code: "// 1. Validate status code be 200 o 201\r
+
+      pm.test(\"Status code is 200 or 201\", function () {\r
+
+      \    pm.expect(pm.response.code).to.be.oneOf([200, 201]);\r
+
+      });\r
+
+      \r
+
+      // 2. Validate toppings\r
+
+      pm.test(\"Validate toppings payload\", function () {\r
+
+      \    const responseData = pm.response.json();\r
+
+      \    const toppings = responseData.json.topping;\r
+
+      \r
+
+      \    // Validate bacon, cheese and mushroom\r
+
+      \    pm.expect(toppings).to.include(\"bacon\");\r
+
+      \    pm.expect(toppings).to.include(\"cheese\");\r
+
+      \    pm.expect(toppings).to.include(\"mushroom\");\r
+
+      \r
+
+      \    // Validate NO chicken\r
+
+      \    pm.expect(toppings).to.not.include(\"chicken\");\r
+
+      });"
+    language: text/javascript
+order: 2972432899722532

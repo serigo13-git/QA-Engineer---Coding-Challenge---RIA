@@ -1,0 +1,50 @@
+$kind: http-request
+name: GET Validation ria
+description: ""
+url: https://jsonplaceholder.typicode.com/posts/
+method: GET
+scripts:
+  - type: afterResponse
+    code: "// 1. validate status code 200 OK\r
+
+      pm.test(\"Status code is 200 OK\", function () {\r
+
+      \    pm.response.to.have.status(200);\r
+
+      });\r
+
+      \r
+
+      // 2. validate title and body have content, but not 'zombie'\r
+
+      pm.test(\"Validate title, body, and check for no zombie\", function () {\r
+
+      \    const responseData = pm.response.json();\r
+
+      \    \r
+
+      \    responseData.forEach((post) => {\r
+
+      \        // VeriVerify title its not empty\r
+
+      \        pm.expect(post.title).to.be.a('string').that.is.not.empty;\r
+
+      \        // VeriVerify body its not empty\r
+
+      \        pm.expect(post.body).to.be.a('string').that.is.not.empty;\r
+
+      \        \r
+
+      \        // VeriVerify title and body be there but not 'zombie'\r
+
+      \        pm.expect(post.title.toLowerCase()).to.not.include('zombie');\r
+
+      \        // Secure verification for the body\r
+
+      \        pm.expect(post.body.toLowerCase()).to.not.include('zombie');\r
+
+      \    });\r
+
+      });"
+    language: text/javascript
+order: 1787942670400
